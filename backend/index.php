@@ -1,25 +1,26 @@
 <?php
 session_start();
+session_regenerate_id(true); // Evita fixação de sessão
 include 'config.php'; 
 
+$erro = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
     $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
-        //session_regenerate_id(true);
         $_SESSION['user_id'] = $user['id'];
         header('Location: dashboard.php');
-         exit;
+        exit;
     } else {
-         echo "<p class='error'>Usuário ou senha inválidos.</p>";
+        $erro = 'Usuário ou senha inválidos.';
     }
-        }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
