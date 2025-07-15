@@ -17,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $stmt = $pdo->prepare("INSERT INTO credentials (user_id, service_name, login, password) VALUES (?, ?, ?, ?)");
         $stmt->execute([$user_id, $service, $login, $password]);
-        echo "<p class='success'>Credencial adicionada!</p>";
+        header("Location: dashboard.php?success=1");
+        exit;
     } catch (PDOException $e) {
         echo "<p class='error'>Erro ao salvar: " . $e->getMessage() . "</p>";
     }
