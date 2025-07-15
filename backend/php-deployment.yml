@@ -20,9 +20,34 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
-
+        env:
+        - name: DB_HOST
+          value: "mysql-connection"
+        - name: DB_NAME
+          value: "testebanco"
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASS
+          value: "Senha123"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        volumeMounts:
+        - name: php-session-storage
+          mountPath: /var/lib/php/sessions
+      volumes:
+      - name: php-session-storage
+        emptyDir: {}
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
