@@ -1,4 +1,6 @@
-<?php include 'config.php'; ?>
+<?php
+include 'config.php';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,19 +13,25 @@
         <h2>Cadastrar Novo Usuário</h2>
         <?php
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nome = $_POST['nome'];
-            $username = $_POST['username'];
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $nome = trim(htmlspecialchars($_POST['nome']));
+            $username = trim(htmlspecialchars($_POST['username']));
+            $senha = $_POST['password'];
 
-            try {
-                $stmt = $pdo->prepare("INSERT INTO users (nome, username, password) VALUES (?, ?, ?)");
-                $stmt->execute([$nome, $username, $password]);
-                echo "<p class='success'>Cadastro realizado! <a href='index.php'>Faça login</a></p>";
-            } catch (PDOException $e) {
-                if ($e->getCode() == 23000) {
-                    echo "<p class='error'>Nome de usuário já existe.</p>";
-                } else {
-                    echo "<p class='error'>Erro no cadastro: " . $e->getMessage() . "</p>";
+            if (strlen($senha) < 6) {
+                echo "<p class='error'>A senha deve ter pelo menos 6 caracteres.</p>";
+            } else {
+                $password = password_hash($senha, PASSWORD_DEFAULT);
+
+                try {
+                    $stmt = $pdo->prepare("INSERT INTO users (nome, username, password) VALUES (?, ?, ?)");
+                    $stmt->execute([$nome, $username, $password]);
+                    echo "<p class='success'>Cadastro realizado! <a href='index.php'>Faça login</a></p>";
+                } catch (PDOException $e) {
+                    if ($e->getCode() == 23000) {
+                        echo "<p class='error'>Nome de usuário já existe.</p>";
+                    } else {
+                        echo "<p class='error'>Erro no cadastro: " . $e->getMessage() . "</p>";
+                    }
                 }
             }
         }
