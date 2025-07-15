@@ -23,8 +23,13 @@ $credentials = $stmt->fetchAll();
 <body>
     <div class="container">
         <h2>Minhas Credenciais</h2>
+
+        <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+            <p class="success">Credencial adicionada com sucesso!</p>
+        <?php endif; ?>
+
         <?php if (count($credentials) > 0): ?>
-          <div class="table-responsive">
+        <div class="table-responsive">
             <table>
                 <tr>
                     <th>Serviço</th>
@@ -35,11 +40,11 @@ $credentials = $stmt->fetchAll();
                     <tr>
                         <td><?= htmlspecialchars($cred['service_name']) ?></td>
                         <td><?= htmlspecialchars($cred['login']) ?></td>
-                        <td><?= htmlspecialchars($cred['password']) ?></td>
+                        <td><?= htmlspecialchars($cred['password']) ?></td> <!-- aqui pode-se ofuscar se quiser -->
                     </tr>
                 <?php endforeach; ?>
             </table>
-            </div>
+        </div>
         <?php else: ?>
             <p>Você ainda não possui credenciais salvas.</p>
         <?php endif; ?>
