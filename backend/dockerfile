@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install mysqli
+    && mkdir -p /var/lib/php/sessions
+    && chmod -R 777 /var/lib/php/sessions
 
 
 EXPOSE 80
